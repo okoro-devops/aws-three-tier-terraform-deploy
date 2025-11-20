@@ -11,7 +11,7 @@ spec:
   ingressClassName: external-nginx
   tls:
   - hosts:
-    - argocd.cloudwitches.online
+    - argocd.mypodxix.online
     secretName: argocd-mypodsix-online
   rules:
   - host: argocd.mypodsix.online
