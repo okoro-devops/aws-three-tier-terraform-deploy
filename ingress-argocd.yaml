@@ -12,9 +12,9 @@ spec:
   tls:
   - hosts:
     - argocd.cloudwitches.online
-    secretName: argocd-cloudwitches-online
+    secretName: argocd-mypodsix-online
   rules:
-  - host: argocd.cloudwitches.online
+  - host: argocd.mypodsix.online
     http:
       paths:
       - path: /
