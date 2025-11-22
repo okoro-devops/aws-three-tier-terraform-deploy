@@ -33,16 +33,28 @@ module "eks-deployment" {
     email = var.email
   
 }
+module "dns-deployment" {
+  source = "./module-dns"
 
-module "namecheap-deployment" {
-    source = "./module-dns"
-    environment = var.environment
-    domain-name = var.domain-name
-    nginx_lb_ip = module.eks-deployment.nginx_lb_ip
-    nginx_ingress_load_balancer_hostname = module.eks-deployment.nginx_ingress_load_balancer_hostname
-    nginx_ingress_lb_dns = module.eks-deployment.nginx_ingress_lb_dns
-  
+  environment                     = var.environment
+  domain-name                     = var.domain-name
+
+  nginx_lb_ip                     = module.eks-deployment.nginx_lb_ip
+  nginx_ingress_lb_dns            = module.eks-deployment.nginx_ingress_lb_dns
+  nginx_ingress_load_balancer_hostname = module.eks-deployment.nginx_ingress_load_balancer_hostname
 }
+
+
+
+# module "namecheap-deployment" {
+#     source = "./module-dns"
+#     environment = var.environment
+#     domain-name = var.domain-name
+#     nginx_lb_ip = module.eks-deployment.nginx_lb_ip
+#     nginx_ingress_load_balancer_hostname = module.eks-deployment.nginx_ingress_load_balancer_hostname
+#     nginx_ingress_lb_dns = module.eks-deployment.nginx_ingress_lb_dns
+  
+# }
 
 module "rds-mysql-deployment" {
     source = "./module-database"
