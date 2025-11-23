@@ -10,8 +10,9 @@ resource "aws_subnet" "private_subnet" {
     tags = {
         Name = "${var.environment}-private-subnet-${count.index + 1}-${data.aws_availability_zones.available.names[count.index]}"
         Environment = var.environment
-        "kubernetes.io/cluster/eks" = "shared"
+        #"kubernetes.io/cluster/eks" = "shared"
         "kubernetes.io/role/internal-elb" = "1"
-        "kubernetes.io/cluster/${var.environment}-${var.cluster_name}" = "owned"
+        "kubernetes.io/cluster/${var.environment}-${var.cluster_name}" = "shared"
     }
 }
+
