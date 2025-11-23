@@ -1,4 +1,4 @@
- name: Deploy to AWS with Terraform actions
+ name: Deploy to AWS with Terraform
 
  on:
    push:
