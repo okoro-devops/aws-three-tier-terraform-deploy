@@ -1,9 +1,15 @@
-resource "aws_nat_gateway" "name" {
-    count = var.create_elastic_ip ? var.countsub : 0
-    allocation_id = aws_eip.elastic-ip[count.index].id
-    subnet_id = aws_subnet.public_subnet[count.index].id
-    tags = {
-        Name = "${var.environment}-nat-gateway-${count.index + 1}"
-        Environment = var.environment
-    }
+# ==========================
+# NAT Gateways
+# ==========================
+resource "aws_nat_gateway" "nat" {
+  count         = var.countsub
+  allocation_id = aws_eip.nat[count.index].id
+  subnet_id     = aws_subnet.public[count.index].id
+
+  tags = {
+    Name        = "${var.environment}-nat-gateway-${count.index + 1}"
+    Environment = var.environment
+  }
+
+  depends_on = [aws_eip.nat]
 }

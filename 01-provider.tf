@@ -1,40 +1,31 @@
-# provider "aws" {
-#   region = "eu-north-1"
-# }
-
-
-# terraform {
-#   required_providers {
-#     namecheap = {
-#       source = "namecheap/namecheap"
-#       version = "2.2.0"
-#     }
-#     aws = {
-#       source = "hashicorp/aws"
-#       version = "6.0.0-beta2"
-#     }
-#   }
-# }
-
-# provider "namecheap" {
-#   user_name = var.namecheap_username
-#   api_user = var.namecheap_api_user
-#   api_key = var.namecheap_api_key
-#   client_ip = var.namecheap_client_ip
-#   use_sandbox = false
-#}
-
-
+// Root provider and required_providers configuration.
+//
+// This file pins provider sources/versions at the root. Modules should
+// not pin provider versions; instead modules should document provider
+// expectations (see module-*/providers.tf).
 
 terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = ">= 6.0.0-beta2"
+      version = ">= 4.0"
+    }
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = ">= 2.0"
+    }
+    helm = {
+      source  = "hashicorp/helm"
+      version = ">= 3.0"
     }
   }
   required_version = ">= 1.6.0"
 }
+
 provider "aws" {
   region = "eu-north-1"
 }
+
+# Kubernetes & Helm providers are configured in-module using exec auth
+# so they use the EKS IAM auth token at runtime. See module-eks/providers.tf
+# for example provider alias configuration.

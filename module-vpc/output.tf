@@ -1,27 +1,35 @@
+# ==========================
+# Outputs
+# ==========================
 output "vpc_id" {
-  description = "The ID of the VPC"
-  value       = aws_vpc.vpc-main.id
-  sensitive = true
-  
+  value       = aws_vpc.main.id
+  description = "VPC ID"
+}
+
+output "public_subnet_ids" {
+  value       = aws_subnet.public[*].id
+  description = "Public subnet IDs"
 }
 
 output "private_subnet_ids" {
-  description = "List of private subnet IDs"
-  value       = aws_subnet.private_subnet[*].id
-}
-output "public_subnet_ids" {
-  description = "List of public subnet IDs"
-  value       = aws_subnet.public_subnet[*].id
+  value       = aws_subnet.private[*].id
+  description = "Private subnet IDs"
 }
 
+output "private_db_subnet_ids" {
+  value       = aws_subnet.private_db[*].id
+  description = "Private DB subnet IDs"
+}
+
+output "mysql_sg_id" {
+  description = "Security Group ID for MySQL"
+  value       = aws_security_group.mysql_sg.id # <-- matches your resource name
+}
 
 output "private_subnet_db_ids" {
-  description = "List of private subnet IDs"
-  value       = aws_subnet.private_subnet_db[*].id
+  value = aws_subnet.private_db[*].id
 }
 
 output "aws_security_group_ids" {
-  description = "List of security group IDs"
-  value       = aws_security_group.mysql_sg.id
-  
+  value = aws_security_group.mysql_sg.id
 }

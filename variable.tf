@@ -2,14 +2,14 @@ variable "vpc_cidrblock" {
   description = "CIDR block for the VPC"
   type        = string
   default     = "192.168.0.0/16"
-  
+
 }
 
 variable "environment" {
   description = "Environment name (e.g., dev, staging, prod)"
   type        = string
   default     = "staging"
-  
+
 }
 
 variable "create_subnet" {
@@ -22,7 +22,7 @@ variable "countsub" {
   description = "Number of subnets to create"
   type        = number
   default     = 2
-  
+
 }
 variable "create_elastic_ip" {
   description = "Flag to create Elastic IPs"
@@ -46,14 +46,14 @@ variable "max_size" {
 variable "min_size" {
   description = "Minimum size of the EKS node group"
   type        = number
-  default     = 2 
+  default     = 2
 }
 
 variable "instance_types" {
   description = "Instance types for the EKS node group"
   type        = list(string)
-  default     = ["t3.micro"]    
-} 
+  default     = ["t3.micro"]
+}
 
 variable "capacity_type" {
   description = "Capacity type for the EKS node group"
@@ -65,57 +65,58 @@ variable "eks_version" {
   type        = string
   default     = "1.32"
 }
-variable "ami_type" {
-  description = "AMI type for the EKS node group"
-  type        = string
-  default     = "AL2_x86_64" # Use AL2_x86_64 for x86 instances, AL2_ARM_64 for ARM instances
-}
+## The following variables are currently unused in this repository.
+## They are commented out to avoid lint warnings but left here
+## so you can re-enable them easily if needed.
 
-variable "label_one" {
-  description = "Label for the EKS node group"
-  type        = string
-  default     = "system"
-}
+# variable "ami_type" {
+#   description = "AMI type for the EKS node group"
+#   type        = string
+#   default     = "AL2_x86_64" # Use AL2_x86_64 for x86 instances, AL2_ARM_64 for ARM instances
+# }
+#
+# variable "label_one" {
+#   description = "Label for the EKS node group"
+#   type        = string
+#   default     = "system"
+# }
+#
+# variable "zone_name" {
+#   description = "Name of the DNS zone"
+#   type        = string
+#   default     = "example.com"
+# }
 
-variable "zone_name" {
-  description = "Name of the DNS zone"
-  type        = string
-  default     = "example.com"
-}
-
-variable "domain-name" {
-  description = "Domain name to be created"
+variable "domain_name" {
+  description = "Alternate variable name for domain (compatibility with modules)"
   type        = string
   default     = "myapp.example.com"
 }
 
-variable "namecheap_api_user" {
-  description = "Namecheap API user"
-  type        = string
-  default     = "smartobi"
-}
-variable "namecheap_api_key" {
-  description = "Namecheap API key"
-  type        = string
-  default     = "a3ca57241b794d44b0fc3387ca9b62a9"
-}
-variable "namecheap_username" {
-  description = "Namecheap username"
-  type        = string
-  default     = "smartobi"
-}
-variable "namecheap_client_ip" {
-  description = "Client IP for Namecheap API access"
-  type        = string
-  default     = "3.101.24.8" # Replace with your actual client IP
-}
+## Namecheap integration variables (commented out — configure Namecheap manually)
+# variable "namecheap_api_user" {
+#   description = "Namecheap API user"
+#   type        = string
+# }
+# variable "namecheap_api_key" {
+#   description = "Namecheap API key"
+#   type        = string
+# }
+# variable "namecheap_username" {
+#   description = "Namecheap username"
+#   type        = string
+# }
+# variable "namecheap_client_ip" {
+#   description = "Client IP for Namecheap API access"
+#   type        = string
+# }
 
 #===========
 
 variable "db_instance_class" {
   description = "Instance class for the RDS database"
   type        = string
-  default     = "db.t3.micro" 
+  default     = "db.t3.micro"
 }
 
 variable "db_allocated_storage" {
@@ -158,7 +159,7 @@ variable "repository_name" {
   description = "Name of the ECR repository"
   type        = string
   default     = "eks-repository"
-  
+
 }
 
 variable "email" {
