@@ -5,9 +5,12 @@ terraform {
     key     = "prod/terraform.tfstate"
     region  = "eu-north-1"
     encrypt = true
-    # DynamoDB table used for state locking (create separately)
-    dynamodb_table = "pod-6-project-lock"
-    acl            = "bucket-owner-full-control"
+    # NOTE: DynamoDB state locking intentionally disabled per request.
+    # Using S3 only means Terraform will not acquire a DynamoDB lock. This
+    # is acceptable for single-operator workflows but not recommended for
+    # concurrent/team workflows because it does not prevent concurrent state
+    # writes.
+    acl = "bucket-owner-full-control"
   }
 }
 

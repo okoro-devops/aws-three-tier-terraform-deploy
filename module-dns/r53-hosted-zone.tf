@@ -9,22 +9,18 @@ resource "aws_route53_zone" "r53_zone" {
   }
 }
 
+
+
 ## Resolve whichever LB DNS variable is supplied (legacy or new)
 locals {
   lb_dns = var.nginx_lb_dns != "" ? var.nginx_lb_dns : (var.nginx_ingress_lb_dns != "" ? var.nginx_ingress_lb_dns : "")
 }
 
-## Note: creating a CNAME at the zone apex (the naked domain) is invalid
-## because the zone already has SOA/NS records. Only create subdomain
-## CNAME records when an upstream LB DNS is provided.
-
-locals {
-  # Prefer public node IPs if requested, otherwise private
-  node_ips = length(var.node_ips_public) > 0 && var.node_record_source == "public" ? var.node_ips_public : var.node_ips_private
-}
-
+# -----------------------------
+# FRONTEND (uses LB only)
+# -----------------------------
 resource "aws_route53_record" "frontend_cname" {
-  count   = var.create_records && local.lb_dns != "" ? 1 : 0
+  count   = var.create_records ? 1 : 0
   zone_id = aws_route53_zone.r53_zone.zone_id
   name    = "bank.${var.domain_name}"
   type    = "CNAME"
@@ -32,17 +28,11 @@ resource "aws_route53_record" "frontend_cname" {
   records = [local.lb_dns]
 }
 
-resource "aws_route53_record" "frontend_a" {
-  count   = var.create_records && local.lb_dns == "" && length(local.node_ips) > 0 ? 1 : 0
-  zone_id = aws_route53_zone.r53_zone.zone_id
-  name    = "bank.${var.domain_name}"
-  type    = "A"
-  ttl     = 300
-  records = local.node_ips
-}
-
+# -----------------------------
+# BACKEND API (uses LB only)
+# -----------------------------
 resource "aws_route53_record" "backend_cname" {
-  count   = var.create_records && local.lb_dns != "" ? 1 : 0
+  count   = var.create_records ? 1 : 0
   zone_id = aws_route53_zone.r53_zone.zone_id
   name    = "bankapi.${var.domain_name}"
   type    = "CNAME"
@@ -50,17 +40,11 @@ resource "aws_route53_record" "backend_cname" {
   records = [local.lb_dns]
 }
 
-resource "aws_route53_record" "backend_a" {
-  count   = var.create_records && local.lb_dns == "" && length(local.node_ips) > 0 ? 1 : 0
-  zone_id = aws_route53_zone.r53_zone.zone_id
-  name    = "bankapi.${var.domain_name}"
-  type    = "A"
-  ttl     = 300
-  records = local.node_ips
-}
-
+# -----------------------------
+# ARGO CD (uses LB only)
+# -----------------------------
 resource "aws_route53_record" "argocd_cname" {
-  count   = var.create_records && local.lb_dns != "" ? 1 : 0
+  count   = var.create_records ? 1 : 0
   zone_id = aws_route53_zone.r53_zone.zone_id
   name    = "argocd.${var.domain_name}"
   type    = "CNAME"
@@ -68,14 +52,6 @@ resource "aws_route53_record" "argocd_cname" {
   records = [local.lb_dns]
 }
 
-resource "aws_route53_record" "argocd_a" {
-  count   = var.create_records && local.lb_dns == "" && length(local.node_ips) > 0 ? 1 : 0
-  zone_id = aws_route53_zone.r53_zone.zone_id
-  name    = "argocd.${var.domain_name}"
-  type    = "A"
-  ttl     = 300
-  records = local.node_ips
-}
 
 
 
@@ -104,17 +80,6 @@ resource "aws_route53_record" "argocd_a" {
 #     records = [var.nginx_lb_ip]
 #   }
 
-# resource "aws_route53_record" "name1" {
-#     zone_id = aws_route53_zone.r53_zone.zone_id
-#     name    = "bankapi.${var.domain-name}" # Use a subdomain for CNAME
-#     type    = "CNAME"
-#     ttl     = 300
-#     records = [var.nginx_lb_ip]
-#   }
-# resource "aws_route53_record" "name2" {
-#     zone_id = aws_route53_zone.r53_zone.zone_id
-#     name    = "argocd.${var.domain-name}" # Use a subdomain for CNAME
-#     type    = "CNAME"
-#     ttl     = 300
-#     records = [var.nginx_lb_ip]
-#   }
+
+
+

@@ -64,20 +64,17 @@ variable "eks_version" {
   type        = string
   default     = "1.33"
 }
-## The following variables are unused in this module by default.
-## They are commented out to avoid lint warnings but can be enabled if you need them.
+variable "ami_type" {
+  description = "AMI type for the EKS node group; when empty the module auto-selects based on eks_version"
+  type        = string
+  default     = ""
+}
 
-# variable "ami_type" {
-#   description = "AMI type for the EKS node group"
-#   type        = string
-#   default     = "" # When empty, module will auto-select a compatible AMI type based on eks_version
-# }
-#
-# variable "label_one" {
-#   description = "Label for the EKS node group"
-#   type        = string
-#   default     = "system"
-# }
+variable "label_one" {
+  description = "Label for the EKS node group"
+  type        = string
+  default     = "system"
+}
 
 # variable "subnet_ids" {
 #   type = list(string)

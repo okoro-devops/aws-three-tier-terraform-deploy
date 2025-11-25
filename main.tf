@@ -38,7 +38,10 @@ module "dns_deployment" {
   domain_name = var.domain_name
 
   # Enable creation of Route53 records now that the cluster/ingress exists.
-  create_records = true
+  # Disabled for this apply so DNS resources are created in a dedicated follow-up
+  # apply after the LB/node outputs are known. Creating records here while the
+  # LB/node outputs are unknown leads to invalid Route53 requests during apply.
+  create_records = false
 
   nginx_lb_ip                          = module.eks_deployment.nginx_lb_ip
   nginx_ingress_lb_dns                 = module.eks_deployment.nginx_ingress_lb_dns
