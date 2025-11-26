@@ -125,11 +125,11 @@ variable "db_allocated_storage" {
   default     = 20
 }
 
-# variable "db_subnet_group_name" {
-#   description = "Name of the DB subnet group"
-#   type        = string
-#   default     = "my-db-subnet-group"
-# }
+variable "db_subnet_group_name" {
+  description = "Name of the DB subnet group"
+  type        = string
+  default     = "my-db-subnet-group"
+}
 
 variable "db_username" {
   description = "Username for the database"
@@ -167,3 +167,28 @@ variable "email" {
   type        = string
   default     = "okoro.christianpeace@gmail.com"
 }
+variable "vpc_cidr" {
+  type = string
+}
+
+variable "azs" {
+  type = list(string)
+}
+
+variable "public_subnet_cidrs" {
+  type = list(string)
+}
+
+variable "private_subnet_cidrs" {
+  type = list(string)
+}
+
+variable "private_db_subnet_cidrs" {
+  type = list(string)
+}
+
+variable "ami_type" {
+  type    = string
+  default = "AL2023_x86_64_STANDARD"
+}
+

@@ -1,19 +1,14 @@
-# ==========================
-# Private Subnets for DB
-# ==========================
 resource "aws_subnet" "private_db" {
-  count             = var.countsub
+  count             = length(var.private_db_subnet_cidrs)
   vpc_id            = aws_vpc.main.id
-  availability_zone = sort(data.aws_availability_zones.available.names)[count.index]
-  cidr_block        = "192.168.${count.index + 20}.0/24"
+  cidr_block        = var.private_db_subnet_cidrs[count.index]
+  availability_zone = var.azs[count.index]
 
   tags = {
-    Name                                                           = "${var.environment}-private-subnet-db-${count.index + 1}"
-    Environment                                                    = var.environment
-    "kubernetes.io/role/internal-elb"                              = "1"
-    "kubernetes.io/cluster/${var.environment}-${var.cluster_name}" = "owned"
+    Name = "${var.environment}-db-${count.index}"
   }
 }
+
 
 
 

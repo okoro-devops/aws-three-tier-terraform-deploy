@@ -1,11 +1,11 @@
 # ==========================
 # Internet Gateway
 # ==========================
-resource "aws_internet_gateway" "gw" {
+resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.main.id
 
   tags = {
-    Name        = "${var.environment}-internet-gateway"
-    Environment = var.environment
+    Name = "${var.environment}-igw"
   }
 }
+

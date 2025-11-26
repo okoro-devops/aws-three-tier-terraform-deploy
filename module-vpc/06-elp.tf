@@ -2,12 +2,9 @@
 # Elastic IPs for NAT
 # ==========================
 resource "aws_eip" "nat" {
-  count = var.countsub
-
+  domain = "vpc"
   tags = {
-    Name        = "${var.environment}-elastic-ip-nat-${count.index + 1}"
-    Environment = var.environment
+    Name = "${var.environment}-nat-eip"
   }
-
-  depends_on = [aws_internet_gateway.gw]
 }
+

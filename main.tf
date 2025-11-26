@@ -1,14 +1,27 @@
 # ==========================
 # Stage 1: VPC & Networking
 # ==========================
+# module "vpc_deployment" {
+#   source            = "./module-vpc"
+#   environment       = var.environment
+#   vpc_cidr     = var.vpc_cidr
+#   countsub          = var.countsub
+#   create_subnet     = var.create_subnet
+#   create_elastic_ip = var.create_elastic_ip
+
+# }
+
 module "vpc_deployment" {
-  source            = "./module-vpc"
-  environment       = var.environment
-  vpc_cidrblock     = var.vpc_cidrblock
-  countsub          = var.countsub
-  create_subnet     = var.create_subnet
-  create_elastic_ip = var.create_elastic_ip
+  source = "./module-vpc"
+
+  environment             = var.environment
+  vpc_cidr                = var.vpc_cidr
+  azs                     = var.azs
+  public_subnet_cidrs     = var.public_subnet_cidrs
+  private_subnet_cidrs    = var.private_subnet_cidrs
+  private_db_subnet_cidrs = var.private_db_subnet_cidrs
 }
+
 
 # ==========================
 # Stage 2: EKS Cluster
@@ -26,7 +39,7 @@ module "eks_deployment" {
   public_subnet_ids  = module.vpc_deployment.public_subnet_ids
   private_subnet_ids = module.vpc_deployment.private_subnet_ids
   repository_name    = var.repository_name
-  domain_name        = var.domain_name
+  domain-name        = var.domain_name
   email              = var.email
 }
 
@@ -37,18 +50,13 @@ module "dns_deployment" {
   environment = var.environment
   domain_name = var.domain_name
 
-  # Enable creation of Route53 records now that the cluster/ingress exists.
-  # Disabled for this apply so DNS resources are created in a dedicated follow-up
-  # apply after the LB/node outputs are known. Creating records here while the
-  # LB/node outputs are unknown leads to invalid Route53 requests during apply.
-  create_records = false
+  frontend_lb_dns = module.eks_deployment.nginx_ingress_lb_dns
+  backend_lb_dns  = module.eks_deployment.nginx_ingress_lb_dns
+  argocd_lb_dns   = module.eks_deployment.nginx_ingress_lb_dns
 
   nginx_lb_ip                          = module.eks_deployment.nginx_lb_ip
   nginx_ingress_lb_dns                 = module.eks_deployment.nginx_ingress_lb_dns
   nginx_ingress_load_balancer_hostname = module.eks_deployment.nginx_ingress_load_balancer_hostname
-  # Use private node IPs for A records (nodes are not assigned public IPs)
-  node_record_source = "private"
-  node_ips_private   = module.eks_deployment.nginx_node_ips_private
 }
 
 
@@ -57,14 +65,14 @@ module "dns_deployment" {
 # ==========================
 module "rds-mysql_deployment" {
   source                 = "./module-database"
+  private_subnet_db_ids   = module.vpc_deployment.private_subnet_ids   # or private_subnet_db_ids if separate
+  aws_security_group_ids  = module.vpc_deployment.mysql_security_group_id
   environment            = var.environment
   db_instance_class      = var.db_instance_class
   db_allocated_storage   = var.db_allocated_storage
-  private_subnet_db_ids  = module.vpc_deployment.private_subnet_db_ids
   db_name                = var.db_name
   db_password            = var.db_password
   db_username            = var.db_username
-  aws_security_group_ids = module.vpc_deployment.aws_security_group_ids
   # Optional depends_on is fine for VPC
   depends_on = [module.vpc_deployment]
 }
