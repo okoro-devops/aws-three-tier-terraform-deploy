@@ -1,7 +1,21 @@
-server:
-  extraArgs:
-  - --insecure
+# server:
+#   extraArgs:
+#   - --insecure
 
 
 # password generation on argocd
 # kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d
+
+server:
+  service:
+    type: LoadBalancer
+    ports:
+      http: 80
+      https: 443
+
+  # Allow UI on HTTP — required when running behind NGINX ingress
+  extraArgs:
+    - --insecure
+
+  ingress:
+    enabled: false

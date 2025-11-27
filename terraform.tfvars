@@ -21,7 +21,7 @@ environment = "production"
 vpc_cidr = "192.168.0.0/16"
 
 # Availability Zones
-azs = ["eu-north-1a", "eu-north-1b"]
+azs = ["us-east-1a", "us-east-1b"]
 
 # Public Subnets
 public_subnet_cidrs = [
@@ -51,6 +51,6 @@ eks_version    = "1.33"
 ami_type       = "AL2023_x86_64_STANDARD"
 
 domain_name     = "mypodsix.online"
-cluster_name    = "production-eks-cluster"
+cluster_name    = "eks-cluster"
 repository_name = "eks-repository"
 email           = "okoro.christianpeace@gmail.com"

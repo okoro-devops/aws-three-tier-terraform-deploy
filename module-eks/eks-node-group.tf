@@ -21,6 +21,8 @@ resource "aws_eks_node_group" "eks_node_group" {
   tags = {
     Name        = "${var.environment}-eks-node-group"
     Environment = var.environment
+    "k8s.io/cluster-autoscaler/enabled" = "true"
+    "k8s.io/cluster-autoscaler/${var.cluster_name}" = "true"
   }
 
   depends_on = [

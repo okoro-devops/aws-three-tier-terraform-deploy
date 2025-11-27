@@ -52,7 +52,7 @@ variable "min_size" {
 variable "instance_types" {
   description = "Instance types for the EKS node group"
   type        = list(string)
-  default     = ["t3.micro"]
+  default     = ["t2.medium"]
 }
 
 variable "capacity_type" {
@@ -63,7 +63,7 @@ variable "capacity_type" {
 variable "eks_version" {
   description = "EKS cluster version"
   type        = string
-  default     = "1.32"
+  default     = "1.33"
 }
 ## The following variables are currently unused in this repository.
 ## They are commented out to avoid lint warnings but left here
@@ -116,7 +116,7 @@ variable "domain_name" {
 variable "db_instance_class" {
   description = "Instance class for the RDS database"
   type        = string
-  default     = "db.t3.micro"
+  default     = "db.t3.medium"
 }
 
 variable "db_allocated_storage" {
